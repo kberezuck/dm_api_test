@@ -1,9 +1,13 @@
 import requests
 
-url = "http://localhost:5051/v1/account"
-
-
 def post_v1_acount():
+    """
+    Register new user
+    :return:
+    """
+
+    url = "http://localhost:5051/v1/account"
+
     payload = {
         "login": "<string>",
         "email": "<string>",
@@ -16,4 +20,10 @@ def post_v1_acount():
         'Accept': 'text/plain'
     }
 
-    response = requests.request("POST", url, headers=headers, json=payload)
+    response = requests.request(
+        method="POST",
+        url=url,
+        headers=headers,
+        json=payload
+    )
+    return response

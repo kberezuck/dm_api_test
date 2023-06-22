@@ -1,9 +1,13 @@
 import requests
 
-url = "http://localhost:5051/v1/account/password"
+def post_v1_account_password():
+    """
+    Reset registered user password
+    :return:
+    """
 
+    url = "http://localhost:5051/v1/account/password"
 
-def post_v1_account_password_reset():
     payload = {
         "login": "<string>",
         "email": "<string>"
@@ -15,4 +19,10 @@ def post_v1_account_password_reset():
         'Accept': 'text/plain'
     }
 
-    response = requests.request("POST", url, headers=headers, json=payload)
+    response = requests.request(
+        method="POST",
+        url=url,
+        headers=headers,
+        json=payload
+    )
+    return response

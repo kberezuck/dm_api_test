@@ -1,9 +1,13 @@
 import requests
 
-url = "http://localhost:5051/v1/account/email"
-
-
 def put_v1_account_email():
+    """
+    Change registered user email
+    :return:
+    """
+
+    url = "http://localhost:5051/v1/account/email"
+
     payload = {
         "login": "<string>",
         "password": "<string>",
@@ -16,4 +20,10 @@ def put_v1_account_email():
         'Accept': 'text/plain'
     }
 
-    response = requests.request("PUT", url, headers=headers, json=payload)
+    response = requests.request(
+        method="PUT",
+        url=url,
+        headers=headers,
+        json=payload
+    )
+    return response

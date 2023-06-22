@@ -1,14 +1,20 @@
 import requests
 
-url = "http://localhost:5051/v1/account/login/all"
-
-
 def v1_account_login_all():
-    payload = {}
+    """
+    Logout from every device
+    :return:
+    """
+    url = "http://localhost:5051/v1/account/login/all"
     headers = {
         'X-Dm-Auth-Token': '<string>',
         'X-Dm-Bb-Render-Mode': '<string>',
         'Accept': 'text/plain'
     }
 
-    response = requests.request("DELETE", url, headers=headers, json=payload)
+    response = requests.request(
+        method="DELETE",
+        url=url,
+        headers=headers
+    )
+    return response
