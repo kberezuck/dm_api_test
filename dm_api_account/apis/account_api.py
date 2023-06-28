@@ -5,6 +5,7 @@ from ..modules import reset_password_model
 from ..modules import change_email_model
 from ..modules import change_password_model
 from requests import session
+from restclient.restclient import Restclient
 
 
 class AccountApi:
@@ -12,9 +13,9 @@ class AccountApi:
     def __init__(self, host, headers=None):
         self.host = host
         self.headers = headers
-        self.session = session()
+        self.client = Restclient(host=host, headers=headers)
         if headers:
-            self.session.headers.update(headers)
+            self.client.session.headers.update(headers)
 
     def get_v1_account(self, **kwargs):
         """
@@ -22,8 +23,8 @@ class AccountApi:
         :return:
         """
 
-        response = self.session.get(
-            url=f"{self.host}/v1/account",
+        response = self.client.get(
+            path=f"/v1/account", #переменная self.host не нужна, так как мы добавлеям этот хост в Restclient
             **kwargs
         )
         return response
@@ -35,8 +36,8 @@ class AccountApi:
         Register new user
         :return:
         """
-        response = self.session.post(
-            url=f"{self.host}/v1/account",
+        response = self.client.post(
+            path=f"/v1/account",
             json=json,
             **kwargs
         )
@@ -48,8 +49,8 @@ class AccountApi:
         Reset registered user password
         :return:
         """
-        response = self.session.post(
-            url=f"{self.host}/v1/account/password",
+        response = self.client.post(
+            path=f"/v1/account/password",
             json=json,
             **kwargs
         )
@@ -61,8 +62,8 @@ class AccountApi:
         Change registered user email
         :return:
         """
-        response = self.session.put(
-            url=f"{self.host}/v1/account/email",
+        response = self.client.put(
+            path=f"/v1/account/email",
             json=json,
             **kwargs
         )
@@ -74,8 +75,8 @@ class AccountApi:
         Change registered user password
         :return:
         """
-        response = self.session.put(
-            url=f"{self.host}/v1/account/password",
+        response = self.client.put(
+            path=f"/v1/account/password",
             json=json,
             **kwargs
         )
@@ -86,8 +87,8 @@ class AccountApi:
         Activate registered user
         :return:
         """
-        response = self.session.put(
-            url=f"{self.host}/v1/account/{token}",
+        response = self.client.put(
+            path=f"/v1/account/{token}",
             **kwargs
         )
         return response
