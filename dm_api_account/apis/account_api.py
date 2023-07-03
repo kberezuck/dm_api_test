@@ -1,13 +1,13 @@
 from requests import Response
 
-#from dm_api_account.models.bad_request_model import BadRequestModel
+# from dm_api_account.models.bad_request_model import BadRequestModel
 from dm_api_account.models.change_email_model import ChangeEmailModel
 from dm_api_account.models.change_password_model import ChangePasswordModel
-#from dm_api_account.models.general_error import GeneralError
+# from dm_api_account.models.general_error import GeneralError
 from dm_api_account.models.registration_model import RegistrationModel
 from dm_api_account.models.reset_password_model import ResetPasswordModel
-from dm_api_account.models.user_envelope_model import UserEnvelopeModel
 from dm_api_account.models.user_details_envelope import UserDetailsEnvelope
+from dm_api_account.models.user_envelope_model import UserEnvelopeModel
 from restclient.restclient import Restclient
 
 
@@ -42,12 +42,12 @@ class AccountApi:
         """
         response = self.client.post(
             path=f"/v1/account",
-            json=json.dict(by_alias=True, exclude_none=True),
+            json=json.model_dump(by_alias=True, exclude_none=True),
             # by_alias- использование только тех "названий переменных", кот-е мы указали.
             **kwargs  # exclude - выключает поля, кот-е ничем незаполнены (опциональные) если их нет, - мы и не поверяем
         )
 
-        #BadRequestModel(**response.json())
+        # BadRequestModel(**response.json())
         return response
 
     def post_v1_account_password(self, json: ResetPasswordModel, **kwargs) -> Response:
@@ -58,11 +58,11 @@ class AccountApi:
         """
         response = self.client.post(
             path=f"/v1/account/password",
-            json=json.dict(by_alias=True, exclude_none=True),
+            json=json.model_dump(by_alias=True, exclude_none=True),
             **kwargs
         )
         UserEnvelopeModel(**response.json())
-        #BadRequestModel(**response.json())
+        # BadRequestModel(**response.json())
         return response
 
     def put_v1_account_email(self, json: ChangeEmailModel, **kwargs) -> Response:
@@ -73,11 +73,11 @@ class AccountApi:
         """
         response = self.client.put(
             path=f"/v1/account/email",
-            json=json.dict(by_alias=True, exclude_none=True),
+            json=json.model_dump(by_alias=True, exclude_none=True),
             **kwargs
         )
         UserEnvelopeModel(**response.json())
-        #BadRequestModel(**response.json())
+        # BadRequestModel(**response.json())
         return response
 
     def put_v1_account_password(self, json: ChangePasswordModel, **kwargs) -> Response:
@@ -88,11 +88,11 @@ class AccountApi:
         """
         response = self.client.put(
             path=f"/v1/account/password",
-            json=json.dict(by_alias=True, exclude_none=True),
+            json=json.model_dump(by_alias=True, exclude_none=True),
             **kwargs
         )
         UserEnvelopeModel(**response.json())
-        #BadRequestModel(**response.json())
+        # BadRequestModel(**response.json())
         return response
 
     def put_v1_account_token(self, token, **kwargs):
@@ -105,5 +105,5 @@ class AccountApi:
             **kwargs
         )
         UserEnvelopeModel(**response.json())
-        #GeneralError(**response.json())
+        # GeneralError(**response.json())
         return response

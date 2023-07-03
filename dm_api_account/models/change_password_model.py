@@ -1,8 +1,7 @@
-from pydantic import BaseModel, StrictStr, UUID4
-
+from pydantic import BaseModel, StrictStr
 
 class ChangePasswordModel(BaseModel):
     login: StrictStr
-    token: UUID4
+    token: StrictStr
     oldPassword: StrictStr
     newPassword: StrictStr

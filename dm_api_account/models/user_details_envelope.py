@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import List, Optional
 
-from pydantic import BaseModel, StrictStr, Field, StrictBool, condate
+from pydantic import BaseModel, StrictStr, Field, StrictBool, AwareDatetime
 
 
 class Roles(Enum):
@@ -56,21 +56,21 @@ class UserSettings(BaseModel):
 class UserDetails(BaseModel):
     login: StrictStr
     roles: List[Roles]
-    medium_picture_url: Optional[StrictStr] = Field(alias="mediumPictureUrl")
-    small_picture_url: Optional[StrictStr] = Field(alias="smallPictureUrl")
-    status: Optional[StrictStr]
+    medium_picture_url: Optional[StrictStr] = Field(default=None, alias="mediumPictureUrl")
+    small_picture_url: Optional[StrictStr] = Field(default=None, alias="smallPictureUrl")
+    status: Optional[StrictStr] = Field(default=None)
     rating: Rating
-    online: Optional[condate()]
-    name: Optional[StrictStr]
-    location: Optional[StrictStr]
-    registration: Optional[condate()]
-    icq: Optional[StrictStr]
-    skype: Optional[StrictStr]
-    original_picture_url: Optional[StrictStr] = Field(alias="originalPictureUrl")
+    online: Optional[AwareDatetime] = Field(default=None)
+    name: Optional[StrictStr] = Field(default=None)
+    location: Optional[StrictStr] = Field(default=None)
+    registration: Optional[AwareDatetime] = Field(default=None)
+    icq: Optional[StrictStr] = Field(default=None)
+    skype: Optional[StrictStr] = Field(default=None)
+    original_picture_url: Optional[StrictStr] = Field(default=None, alias="originalPictureUrl")
     info: InfoBbText
     settings: UserSettings
 
 
 class UserDetailsEnvelope(BaseModel):
     resource: UserDetails
-    metadata: Optional[StrictStr]
+    metadata: Optional[StrictStr] = Field(default=None)

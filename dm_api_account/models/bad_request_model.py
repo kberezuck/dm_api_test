@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Optional, List
 
-from pydantic import BaseModel, StrictStr
+from pydantic import BaseModel, StrictStr, Field
 
 
 # class InvalidProperties(BaseModel):
@@ -16,5 +16,5 @@ class InvalidProperties(Enum):
 
 
 class BadRequestModel(BaseModel):
-    message: Optional[StrictStr]
+    message: Optional[StrictStr] = Field(default=None)
     invalidProperties: List[InvalidProperties]

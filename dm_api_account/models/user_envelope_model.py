@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import List, Optional
 
-from pydantic import BaseModel, StrictStr, Field, StrictBool, condate
+from pydantic import BaseModel, StrictStr, Field, StrictBool, AwareDatetime
 
 
 # в pydantic все поля - обязательные и если нам в ответе от сервера какое-то поле не придет - упадет ошибка.
@@ -27,16 +27,16 @@ class Rating(BaseModel):
 class User(BaseModel):
     login: StrictStr
     roles: List[Roles]
-    medium_picture_url: Optional[StrictStr] = Field(alias="mediumPictureUrl")
-    small_picture_url: Optional[StrictStr] = Field(alias="smallPictureUrl")
-    status: Optional[StrictStr]
+    medium_picture_url: Optional[StrictStr] = Field(default=None, alias="mediumPictureUrl")
+    small_picture_url: Optional[StrictStr] = Field(default=None, alias="smallPictureUrl")
+    status: Optional[StrictStr] = Field(default=None)
     rating: Rating
-    online: Optional[condate()]
-    name: Optional[StrictStr]
-    location: Optional[StrictStr]
-    registration: Optional[condate()]
+    online: Optional[AwareDatetime] = Field(default=None)
+    name: Optional[StrictStr] = Field(default=None)
+    location: Optional[StrictStr] = Field(default=None)
+    registration: Optional[AwareDatetime] = Field(default=None)
 
 
 class UserEnvelopeModel(BaseModel):
-    resource: User
-    metadata: Optional[StrictStr]
+    resource: Optional[User] = Field(default=None)
+    metadata: Optional[StrictStr] = Field(default=None)
