@@ -1,7 +1,8 @@
 from enum import Enum
 from typing import List, Optional
 
-from pydantic import BaseModel, StrictStr, Field, StrictBool, AwareDatetime
+from pydantic import BaseModel, StrictStr, Field, StrictBool
+from datetime import datetime
 
 
 class Roles(Enum):
@@ -60,10 +61,10 @@ class UserDetails(BaseModel):
     small_picture_url: Optional[StrictStr] = Field(default=None, alias="smallPictureUrl")
     status: Optional[StrictStr] = Field(default=None)
     rating: Rating
-    online: Optional[AwareDatetime] = Field(default=None)
+    online: Optional[datetime] = Field(default=None)
     name: Optional[StrictStr] = Field(default=None)
     location: Optional[StrictStr] = Field(default=None)
-    registration: Optional[AwareDatetime] = Field(default=None)
+    registration: Optional[datetime] = Field(default=None)
     icq: Optional[StrictStr] = Field(default=None)
     skype: Optional[StrictStr] = Field(default=None)
     original_picture_url: Optional[StrictStr] = Field(default=None, alias="originalPictureUrl")
