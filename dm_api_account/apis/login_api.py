@@ -1,10 +1,10 @@
+from __future__ import annotations
+
 from requests import Response
 
-from dm_api_account.models.Authenticate_credentials_model import AuthenticateCredentialsModel
-# from dm_api_account.models.bad_request_model import BadRequestModel
-# from dm_api_account.models.general_error import GeneralError
-from dm_api_account.models.user_envelope_model import UserEnvelopeModel
 from restclient.restclient import Restclient
+from ..models import *
+from ..utilities import validate_request_json, validate_status_code
 
 
 class LoginApi:
@@ -15,8 +15,13 @@ class LoginApi:
         if headers:
             self.client.session.headers.update(headers)
 
-    def post_v1_account_login(self, json: AuthenticateCredentialsModel) -> Response:
+    def post_v1_account_login(
+            self,
+            json: LoginCredentials,
+            status_code: int = 200
+    ) -> Response | UserEnvelope:
         """
+        :param status_code:
         :param json Authenticate_credentials_model
         Authenticate via credentials
         :return:
@@ -24,15 +29,23 @@ class LoginApi:
 
         response = self.client.post(
             path=f"/v1/account/login",
-            json=json.model_dump(by_alias=True, exclude_none=True)
+            json=validate_request_json(json)
         )
-        UserEnvelopeModel(**response.json())
-        # BadRequestModel(**response.json())
-        # GeneralError(**response.json())
+        validate_status_code(response, status_code)
+        if response.status_code == 200:
+            return UserEnvelope(**response.json())
         return response
 
-    def del_v1_account_login(self, **kwargs) -> Response:
+        # BadRequestModel(**response.json())
+        # GeneralError(**response.json())
+
+    def del_v1_account_login(
+            self,
+            status_code: int = 204,
+            **kwargs
+    ) -> Response:
         """
+        :param status_code:
         Logout as current user
         :return:
         """
@@ -40,11 +53,17 @@ class LoginApi:
             path=f"/v1/account/login",
             **kwargs
         )
-        # GeneralError(**response.json())
+        validate_status_code(response, status_code)
         return response
+        # GeneralError(**response.json())
 
-    def v1_account_login_all(self, **kwargs) -> Response:
+    def v1_account_login_all(
+            self,
+            status_code: int = 204,
+            **kwargs
+    ) -> Response:
         """
+        :param status_code:
         Logout from every device
         :return:
         """
@@ -52,5 +71,6 @@ class LoginApi:
             path=f"/v1/account/login/all",
             **kwargs
         )
-        # GeneralError(**response.json())
+        validate_status_code(response, status_code)
         return response
+        # GeneralError(**response.json())

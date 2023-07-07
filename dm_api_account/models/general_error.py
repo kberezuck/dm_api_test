@@ -1,5 +1,12 @@
-from pydantic import BaseModel, StrictStr
+from __future__ import annotations
+
+from typing import Optional
+
+from pydantic import BaseModel, Extra, Field, StrictStr
 
 
 class GeneralError(BaseModel):
-    message: StrictStr
+    class Config:
+        extra = Extra.forbid
+
+    message: Optional[StrictStr] = Field(None, description='Client message')

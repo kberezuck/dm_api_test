@@ -1,6 +1,10 @@
 import structlog
-
-from dm_api_account.models.Authenticate_credentials_model import AuthenticateCredentialsModel
+import time
+from datetime import datetime
+from hamcrest import assert_that, has_properties, instance_of
+from dm_api_account.models.registration_model import Registration
+from dm_api_account.models.login_credentials_model import LoginCredentials
+from dm_api_account.models.user_envelope_model import UserRole
 from services.dm_api_account import DmApiAccount
 from services.mailhog import MailhogApi
 
@@ -15,22 +19,29 @@ def test_post_v1_account_login():
     mailhog = MailhogApi(host="http://localhost:5025")
     api = DmApiAccount(host="http://localhost:5051")
 
-    # json = RegistrationModel(
-    #     login="ksb12",
-    #     email="ksb12@mail.ru",
+    # json = Registration(
+    #     login="ksb30",
+    #     email="ksb30@mail.ru",
     #     password="qwerty1234"
     # )
     #
     # response = api.account.post_v1_account(json=json)
     # assert response.status_code == 201, f"Ожидался статус код 201, а фактически {response.status_code}"
-    # time.sleep(2)
-    # token = mailhog.get_token_from_last_email()
-    # response = api.account.put_v1_account_token(token=token)
+    time.sleep(2)
+    token = mailhog.get_token_from_last_email()
+    response = api.account.put_v1_account_token(token=token, status_code=200)
 
-    json = AuthenticateCredentialsModel(
-        login="ksb23",
+    json = LoginCredentials(
+        login="ksb31",
         password="qwerty1234",
         rememberMe=True
     )
 
     response = api.login.post_v1_account_login(json=json)
+    assert_that(response.resource, has_properties(
+        {
+            "login": "ksb31",
+            "roles": [UserRole.guest, UserRole.player],
+        }
+    ))
+    assert_that(response.resource.registration, instance_of(datetime))

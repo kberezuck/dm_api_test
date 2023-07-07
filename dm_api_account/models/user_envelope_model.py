@@ -1,8 +1,10 @@
-from enum import Enum
-from typing import List, Optional
+from __future__ import annotations
 
-from pydantic import BaseModel, StrictStr, Field, StrictBool
 from datetime import datetime
+from enum import Enum
+from typing import Any, List, Optional
+
+from pydantic import BaseModel, Extra, Field, StrictStr
 
 
 # в pydantic все поля - обязательные и если нам в ответе от сервера какое-то поле не придет - упадет ошибка.
@@ -10,34 +12,49 @@ from datetime import datetime
 # №все значения указаны там же ( узнать, является ли поле необязательным - опытным путем по ответу от сервера. где упадет из-за отсутствия значения , там и ставим)
 
 
-class Roles(Enum):
-    GUEST = "Guest"
-    PLAYER = "Player"
-    ADMINISTRATOR = "Administrator"
-    NANNY_MODERATOR = "NannyModerator"
-    REGULAR_MODERATOR = "RegularModerator"
-    SENIOR_MODERATOR = 'SeniorModerator'
+class UserRole(Enum):
+    guest = 'Guest'
+    player = 'Player'
+    administrator = 'Administrator'
+    nanny_moderator = 'NannyModerator'
+    regular_moderator = 'RegularModerator'
+    senior_moderator = 'SeniorModerator'
 
 
 class Rating(BaseModel):
-    enabled: StrictBool
-    quality: int
-    quality: int
+    class Config:
+        extra = Extra.forbid
+
+    enabled: Optional[bool] = Field(None, description='Rating participation flag')
+    quality: Optional[int] = Field(None, description='Quality rating')
+    quantity: Optional[int] = Field(None, description='Quantity rating')
 
 
 class User(BaseModel):
-    login: StrictStr
-    roles: List[Roles]
-    medium_picture_url: Optional[StrictStr] = Field(default=None, alias="mediumPictureUrl")
-    small_picture_url: Optional[StrictStr] = Field(default=None, alias="smallPictureUrl")
-    status: Optional[StrictStr] = Field(default=None)
-    rating: Rating
-    online: Optional[datetime] = Field(default=None)
-    name: Optional[StrictStr] = Field(default=None)
-    location: Optional[StrictStr] = Field(default=None)
-    registration: Optional[datetime] = Field(default=None)
+    class Config:
+        extra = Extra.forbid
+
+    login: Optional[StrictStr] = Field(None, description='Login')
+    roles: Optional[List[UserRole]] = Field(None, description='Roles')
+    medium_picture_url: Optional[StrictStr] = Field(
+        None, alias='mediumPictureUrl', description='Profile picture URL M-size'
+    )
+    small_picture_url: Optional[StrictStr] = Field(
+        None, alias='smallPictureUrl', description='Profile picture URL S-size'
+    )
+    status: Optional[StrictStr] = Field(None, description='User defined status')
+    rating: Optional[Rating] = None
+    online: Optional[datetime] = Field(None, description='Last seen online moment')
+    name: Optional[StrictStr] = Field(None, description='User real name')
+    location: Optional[StrictStr] = Field(None, description='User real location')
+    registration: Optional[datetime] = Field(
+        None, description='User registration moment'
+    )
 
 
-class UserEnvelopeModel(BaseModel):
-    resource: Optional[User] = Field(default=None)
-    metadata: Optional[StrictStr] = Field(default=None)
+class UserEnvelope(BaseModel):
+    class Config:
+        extra = Extra.forbid
+
+    resource: Optional[User] = None
+    metadata: Optional[Any] = Field(None, description='Additional metadata')
