@@ -1,8 +1,6 @@
 import structlog
 
-from dm_api_account.models.registration_model import Registration
-from services.dm_api_account import DmApiAccount
-from services.mailhog import MailhogApi
+from services.dm_api_account import Facade
 
 # делаем лог "красивым" и удобочитаемым
 structlog.configure(
@@ -13,16 +11,24 @@ structlog.configure(
 
 
 def test_post_v1_account():
-    mailhog = MailhogApi(host="http://localhost:5025")
-    api = DmApiAccount(host="http://localhost:5051")  # создали объект класса
-    json = Registration(  # переменная равна payload метода post_v1_account,
-        # которую мы вынесли в папку models
-        login="ksb23",
-        email="ksb23@mail.ru",
-        password="qwerty1234"
+    api = Facade(host="http://localhost:5051")
+    # Register new user
+
+    login = "ksb44"
+    email = "ksb44@mail.ru"
+    password = "qwerty1234"
+
+    response = api.account.register_new_user(
+        login=login,
+        email=email,
+        password=password
     )
 
-    response = api.account.post_v1_account(json=json)
+    # Register activate_user
+    api.account.activate_registered_user(login=login)
 
-    # token = mailhog.get_token_from_last_email()
-    # response = api.account.put_v1_account_token(token=token)
+    # Login user
+    api.login.login_user(
+        login=login,
+        password=password
+    )

@@ -1,10 +1,8 @@
 import structlog
-import time
 from hamcrest import assert_that, has_properties
-from dm_api_account.models.registration_model import Registration
-from dm_api_account.models.user_envelope_model import UserRole, Rating
-from services.dm_api_account import DmApiAccount
-from services.mailhog import MailhogApi
+from dm_api_account.models.user_envelope_model import UserRole
+from services.dm_api_account import Facade
+from dm_api_account.generic.helpers.mailhog import MailhogApi
 
 structlog.configure(
     processors=[
@@ -15,7 +13,7 @@ structlog.configure(
 
 def test_put_v1_account_token():
     mailhog = MailhogApi(host="http://localhost:5025")
-    api = DmApiAccount(host="http://localhost:5051")
+    api = Facade(host="http://localhost:5051")
 
     # json = Registration(
     #     login="ksb31",

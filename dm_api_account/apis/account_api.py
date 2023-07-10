@@ -58,7 +58,6 @@ class AccountApi:
         return response
         # BadRequestModel(**response.json())
 
-
     def post_v1_account_password(
             self,
             json: ResetPassword,
@@ -84,7 +83,6 @@ class AccountApi:
 
         # BadRequestModel(**response.json())
 
-
     def put_v1_account_email(
             self,
             json: ChangeEmail,
@@ -108,7 +106,6 @@ class AccountApi:
         return response
         # BadRequestModel(**response.json())
 
-
     def put_v1_account_password(
             self,
             json: ChangePassword,
@@ -131,7 +128,6 @@ class AccountApi:
             return UserEnvelope(**response.json())
         return response
         # BadRequestModel(**response.json())
-
 
     def put_v1_account_token(
             self,

@@ -5,7 +5,7 @@ from hamcrest import assert_that, has_properties, instance_of, contains_string, 
 
 from dm_api_account.models.reset_password_model import ResetPassword
 from dm_api_account.models.user_envelope_model import UserRole
-from services.dm_api_account import DmApiAccount
+from services.dm_api_account import Facade
 
 structlog.configure(
     processors=[
@@ -15,7 +15,7 @@ structlog.configure(
 
 
 def test_post_v1_account_password():
-    api = DmApiAccount(host="http://localhost:5051")
+    api = Facade(host="http://localhost:5051")
     json = ResetPassword(
         login="ksb31",
         email="ksb31@mail.ru"

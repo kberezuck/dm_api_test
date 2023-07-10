@@ -1,6 +1,6 @@
 import structlog
 
-from services.dm_api_account import DmApiAccount
+from services.dm_api_account import Facade
 
 structlog.configure(
     processors=[
@@ -9,7 +9,7 @@ structlog.configure(
 )
 
 def test_get_v1_account():
-    api = DmApiAccount(host="http://localhost:5051")
+    api = Facade(host="http://localhost:5051")
 
     response = api.account.get_v1_account()
 
