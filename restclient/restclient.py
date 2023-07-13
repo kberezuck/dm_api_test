@@ -28,7 +28,7 @@ class Restclient:
         return self._send_request("PUT", path, **kwargs)
 
     def delete(self, path: str, **kwargs) -> Response:
-        return self._send_request("DEL", path, **kwargs)
+        return self._send_request("DELETE", path, **kwargs)
 
         # пишем метод send_request, который принимает запрос, оборачивает его в лог и отдает обернутый запрос.
         # принимаемые аргументы: method (post,get,put...), path (эндпоинт), kwargs)

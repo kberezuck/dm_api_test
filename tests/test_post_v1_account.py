@@ -14,8 +14,8 @@ def test_post_v1_account():
     api = Facade(host="http://localhost:5051")
     # Register new user
 
-    login = "ksb44"
-    email = "ksb44@mail.ru"
+    login = "ksb49"
+    email = "ksb49@mail.ru"
     password = "qwerty1234"
 
     response = api.account.register_new_user(

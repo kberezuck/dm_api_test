@@ -33,7 +33,7 @@ class MailhogApi:
         self.host = host
         self.client = Restclient(host=host)
 
-
+    # @decorator
     def get_api_v2_messages(self, limit: int = 50) -> Response:
         """
         Get message by limit
@@ -65,6 +65,22 @@ class MailhogApi:
         time.sleep(2)
         return self.get_token_by_login(login=login, attempt=attempt - 1)
 
+    def get_token_by_reset_password(self, login: str, attempt=50):
+        """
+        Get user reset password token from email by login
+        :return:
+        """
+        if attempt == 0:
+            raise AssertionError(f'Не удалось получить письмо с логином {login}')
+        emails = self.get_api_v2_messages(limit=50).json()["items"]
+        for email in emails:
+            user_data = json.loads(email['Content']["Body"])
+            if login == user_data.get("Login"):
+                token = user_data["ConfirmationLinkUri"].split('/')[-1]
+                print(token)
+                return token
+        time.sleep(2)
+        return self.get_token_by_reset_password(login=login, attempt=attempt - 1)
 
-if __name__ == "__main__":
-    MailhogApi().get_api_v2_messages(limit=2)
+# if __name__ == "__main__":
+#     MailhogApi().get_api_v2_messages(limit=2)

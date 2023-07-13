@@ -19,11 +19,11 @@ class LoginApi:
             self,
             json: LoginCredentials,
             status_code: int = 200
-    ) -> Response | UserEnvelope:
+    ) -> Response:
         """
-        :param status_code:
-        :param json Authenticate_credentials_model
         Authenticate via credentials
+        :param status_code:
+        :param json: login_credentials_model
         :return:
         """
 
@@ -33,7 +33,7 @@ class LoginApi:
         )
         validate_status_code(response, status_code)
         if response.status_code == 200:
-            return UserEnvelope(**response.json())
+            UserEnvelope(**response.json())
         return response
 
         # BadRequestModel(**response.json())
@@ -57,7 +57,7 @@ class LoginApi:
         return response
         # GeneralError(**response.json())
 
-    def v1_account_login_all(
+    def delete_v1_account_login_all(
             self,
             status_code: int = 204,
             **kwargs

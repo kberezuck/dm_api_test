@@ -20,20 +20,20 @@ class AccountApi:
             self,
             status_code: int = 200,
             **kwargs
-    ) -> Response | UserDetailsEnvelope:
+    ) -> Response:
         """
-        :param status_code:
         Get current user
+        :param status_code:
         :return:
         """
 
-        response = self.client.get(  # переменная self.host не нужна, так как мы добавлеям этот хост в Restclient
+        response = self.client.get(
             path=f"/v1/account",
             **kwargs
         )
         validate_status_code(response, status_code)
         if response.status_code == 200:
-            return UserDetailsEnvelope(**response.json())
+            UserDetailsEnvelope(**response.json())
         return response
 
     def post_v1_account(
@@ -63,7 +63,7 @@ class AccountApi:
             json: ResetPassword,
             status_code: int = 200,
             **kwargs
-    ) -> Response | UserEnvelope:
+    ) -> Response:
 
         """
         :param status_code:
@@ -78,7 +78,7 @@ class AccountApi:
         )
         validate_status_code(response, status_code)
         if response.status_code == 200:
-            return UserEnvelope(**response.json())
+            UserEnvelope(**response.json())
         return response
 
         # BadRequestModel(**response.json())
@@ -88,7 +88,7 @@ class AccountApi:
             json: ChangeEmail,
             status_code: int = 200,
             **kwargs
-    ) -> Response | UserEnvelope:
+    ) -> Response:
         """
         :param status_code:
         :param json change_email_model
@@ -102,7 +102,7 @@ class AccountApi:
         )
         validate_status_code(response, status_code)
         if response.status_code == 200:
-            return UserEnvelope(**response.json())
+            UserEnvelope(**response.json())
         return response
         # BadRequestModel(**response.json())
 
@@ -111,7 +111,7 @@ class AccountApi:
             json: ChangePassword,
             status_code: int = 200,
             **kwargs
-    ) -> Response | UserEnvelope:
+    ) -> Response:
         """
         :param status_code:
         :param json change_password_model
@@ -125,7 +125,7 @@ class AccountApi:
         )
         validate_status_code(response, status_code)
         if response.status_code == 200:
-            return UserEnvelope(**response.json())
+            UserEnvelope(**response.json())
         return response
         # BadRequestModel(**response.json())
 
@@ -134,7 +134,7 @@ class AccountApi:
             token: str,
             status_code: int == 200,
             **kwargs
-    ) -> Response | UserEnvelope:
+    ) -> Response:
         """
         :param token:
         :param status_code:
@@ -147,6 +147,6 @@ class AccountApi:
         )
         validate_status_code(response, status_code)
         if response.status_code == 200:
-            return UserEnvelope(**response.json())
+            UserEnvelope(**response.json())
         return response
         # GeneralError(**response.json())
