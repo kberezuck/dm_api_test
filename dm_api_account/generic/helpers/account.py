@@ -1,3 +1,4 @@
+from dm_api_account.models import ChangeEmail
 from dm_api_account.models import ChangePassword
 from dm_api_account.models import Registration
 from dm_api_account.models import ResetPassword
@@ -36,7 +37,7 @@ class Account:
         response = self.facade.account_api.get_v1_account(**kwargs)
         return response
 
-    def reset_registered_user_password(self, login: str, email: str):
+    def reset_registered_user_password(self, login: str, email: str, **kwargs):
         response = self.facade.account_api.post_v1_account_password(
             json=ResetPassword(
                 login=login,
@@ -52,4 +53,14 @@ class Account:
                 oldPassword=old_password,
                 newPassword=new_password
             ))
+        return response
+
+    def change_email(self, login: str, email: str, password: str):
+        response = self.facade.account_api.put_v1_account_email(
+            json=ChangeEmail(
+                login=login,
+                email=email,
+                password=password
+            )
+        )
         return response

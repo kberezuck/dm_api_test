@@ -20,7 +20,7 @@ class AccountApi:
             self,
             status_code: int = 200,
             **kwargs
-    ) -> Response:
+    ) -> Response | UserDetailsEnvelope:
         """
         Get current user
         :param status_code:
@@ -63,7 +63,7 @@ class AccountApi:
             json: ResetPassword,
             status_code: int = 200,
             **kwargs
-    ) -> Response:
+    ) -> Response | UserEnvelope:
 
         """
         :param status_code:
@@ -78,7 +78,7 @@ class AccountApi:
         )
         validate_status_code(response, status_code)
         if response.status_code == 200:
-            UserEnvelope(**response.json())
+            return UserEnvelope(**response.json())
         return response
 
         # BadRequestModel(**response.json())
@@ -88,7 +88,7 @@ class AccountApi:
             json: ChangeEmail,
             status_code: int = 200,
             **kwargs
-    ) -> Response:
+    ) -> Response | UserEnvelope:
         """
         :param status_code:
         :param json change_email_model
@@ -102,7 +102,7 @@ class AccountApi:
         )
         validate_status_code(response, status_code)
         if response.status_code == 200:
-            UserEnvelope(**response.json())
+            return UserEnvelope(**response.json())
         return response
         # BadRequestModel(**response.json())
 
@@ -111,7 +111,7 @@ class AccountApi:
             json: ChangePassword,
             status_code: int = 200,
             **kwargs
-    ) -> Response:
+    ) -> Response | UserEnvelope:
         """
         :param status_code:
         :param json change_password_model
@@ -134,7 +134,7 @@ class AccountApi:
             token: str,
             status_code: int == 200,
             **kwargs
-    ) -> Response:
+    ) -> Response | UserEnvelope:
         """
         :param token:
         :param status_code:
@@ -147,6 +147,6 @@ class AccountApi:
         )
         validate_status_code(response, status_code)
         if response.status_code == 200:
-            UserEnvelope(**response.json())
+            return UserEnvelope(**response.json())
         return response
         # GeneralError(**response.json())

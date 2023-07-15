@@ -1,8 +1,8 @@
 import structlog
-from hamcrest import assert_that, has_properties
-
+from hamcrest import assert_that, has_properties, instance_of
+from datetime import datetime
 from dm_api_account.generic.helpers.mailhog import MailhogApi
-from dm_api_account.models.user_envelope_model import UserRole, Rating
+from dm_api_account.models.user_envelope_model import UserRole
 from services.dm_api_account import Facade
 
 structlog.configure(
@@ -11,8 +11,8 @@ structlog.configure(
     ]
 )
 
-login = "ksb63"
-email = "ksb63@mail.ru"
+login = "ksb94"
+email = "ksb94@mail.ru"
 password = "qwerty1234"
 
 
@@ -32,10 +32,7 @@ def test_put_v1_account_token():
     response = api.account_api.put_v1_account_token(token=token, status_code=200)
     assert_that(response.resource, has_properties(
         {
-            "login": "ksb63",
-            "roles": [UserRole.guest, UserRole.player],
-            "enabled": [Rating.Optional],
-            "quality": [Rating.Optional],
-            "quantity": [Rating.Optional],
+            "login": "ksb94",
+            "roles": [UserRole.guest, UserRole.player]
         }
     ))

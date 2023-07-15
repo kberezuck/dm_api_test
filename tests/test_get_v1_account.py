@@ -8,15 +8,15 @@ structlog.configure(
     ]
 )
 
+login = "ksb66"
+email = "ksb66@mail.ru"
+password = "qwerty1234"
 
 def test_get_v1_account():
     api = Facade(host="http://localhost:5051")
 
     # Register new user
 
-    login = "ksb54"
-    email = "ksb54@mail.ru"
-    password = "qwerty1234"
 
     response = api.account.register_new_user(
         login=login,

@@ -8,9 +8,9 @@ structlog.configure(
     ]
 )
 
-login = "bvi4"
-email = "bvi4@mail.ru"
-password = "qwerty1234"
+login = "ksb82"
+email = "ksb82@mail.ru"
+password = "1234qwerty"
 
 
 def test_put_v1_account_password():
@@ -32,6 +32,7 @@ def test_put_v1_account_password():
         login=login,
         password=password
     )
+
     # Get authorisation token and set headers
     token = api.login.get_auth_token(login=login, password=password)
     api.account.set_headers(headers=token)
@@ -40,7 +41,7 @@ def test_put_v1_account_password():
     api.account.reset_registered_user_password(login=login, email=email)
 
     # Change password
-    new_password = '1234qwerty'
+    new_password = 'qwerty1234'
     api.account.change_registered_user_password(
         login=login,
         old_password=password,
