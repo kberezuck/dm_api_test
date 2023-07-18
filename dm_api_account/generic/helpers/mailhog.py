@@ -48,39 +48,32 @@ class MailhogApi:
         )
         return response
 
-    def get_token_by_login(self, login: str, attempt=50):
+    def get_token_by_login(self, login: str, search: str, attempt=50):
         """
         Get user activation token from email by login
         :return:
         """
+
         if attempt == 0:
             raise AssertionError(f'Не удалось получить письмо с логином {login}')
-        emails = self.get_api_v2_messages(limit=50).json()["items"]
+        emails = self.get_api_v2_messages(limit=5).json()["items"]
         for email in emails:
             user_data = json.loads(email['Content']["Body"])
-            if login == user_data.get("Login"):
+            if login == user_data.get("Login") and search == 'activate':
                 token = user_data["ConfirmationLinkUrl"].split('/')[-1]
+                print(token)
+                return token
+            elif login == user_data.get("Login") and search == 'password':
+                token = user_data["ConfirmationLinkUri"].split('/')[-1]
                 print(token)
                 return token
         time.sleep(2)
         return self.get_token_by_login(login=login, attempt=attempt - 1)
 
-    def get_token_by_reset_password(self, login: str, attempt=50):
-        """
-        Get user reset password token from email by login
-        :return:
-        """
-        if attempt == 0:
-            raise AssertionError(f'Не удалось получить письмо с логином {login}')
-        emails = self.get_api_v2_messages(limit=50).json()["items"]
-        for email in emails:
-            user_data = json.loads(email['Content']["Body"])
-            if login == user_data.get("Login"):
-                token = user_data["ConfirmationLinkUri"].split('/')[-1]
-                print(token)
-                return token
-        time.sleep(2)
-        return self.get_token_by_reset_password(login=login, attempt=attempt - 1)
+    def delete_all_messages(self):
+        response = self.client.delete(path='/api/v1/messages')
+        return response
+
 
 # if __name__ == "__main__":
 #     MailhogApi().get_api_v2_messages(limit=2)

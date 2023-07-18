@@ -21,12 +21,13 @@ class Account:
                 login=login,
                 email=email,
                 password=password
-            )
+            ),
+            status_code=201
         )
         return response
 
     def activate_registered_user(self, login: str):
-        token = self.facade.mailhog.get_token_by_login(login=login)
+        token = self.facade.mailhog.get_token_by_login(login=login, search='activate')
         response = self.facade.account_api.put_v1_account_token(
             token=token,
             status_code=200
@@ -37,22 +38,27 @@ class Account:
         response = self.facade.account_api.get_v1_account(**kwargs)
         return response
 
-    def reset_registered_user_password(self, login: str, email: str, **kwargs):
+    def reset_registered_user_password(self, login: str, email: str):
         response = self.facade.account_api.post_v1_account_password(
             json=ResetPassword(
                 login=login,
                 email=email
-            ))
+            ),
+            status_code=200
+        )
         return response
 
-    def change_registered_user_password(self, login: str, new_password: str, old_password: str, **kwargs):
+    def change_registered_user_password(self, login: str, new_password: str, old_password: str):
+        token = self.facade.mailhog.get_token_by_login(login=login, search='password')
         response = self.facade.account_api.put_v1_account_password(
             json=ChangePassword(
                 login=login,
-                token=self.facade.mailhog.get_token_by_reset_password(login=login),
+                token=token,
                 oldPassword=old_password,
                 newPassword=new_password
-            ))
+            ),
+            status_code=200
+        )
         return response
 
     def change_email(self, login: str, email: str, password: str):
@@ -61,6 +67,7 @@ class Account:
                 login=login,
                 email=email,
                 password=password
-            )
+            ),
+            status_code=200
         )
         return response

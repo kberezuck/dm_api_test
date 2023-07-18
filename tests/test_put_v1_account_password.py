@@ -8,8 +8,8 @@ structlog.configure(
     ]
 )
 
-login = "ksb82"
-email = "ksb82@mail.ru"
+login = "ksb016"
+email = "ksb016@mail.ru"
 password = "1234qwerty"
 
 
@@ -45,5 +45,5 @@ def test_put_v1_account_password():
     api.account.change_registered_user_password(
         login=login,
         old_password=password,
-        new_password=new_password,
-        token=token)
+        new_password=new_password
+    )

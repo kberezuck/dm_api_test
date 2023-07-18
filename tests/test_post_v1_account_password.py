@@ -11,9 +11,9 @@ structlog.configure(
         structlog.processors.JSONRenderer(indent=4, sort_keys=True, ensure_ascii=False)
     ]
 )
-login = "ksb78"
-email = "ksb78@mail.ru"
-password = "1234qwerty"
+login = "ksb95"
+email = "ksb95@mail.ru"
+password = "qwerty1234"
 
 
 def test_post_v1_account_password():

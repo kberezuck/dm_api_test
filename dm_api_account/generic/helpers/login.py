@@ -15,7 +15,8 @@ class Login:
                 login=login,
                 password=password,
                 rememberMe=remember_me
-            )
+            ),
+            status_code=200
         )
         return response
 
@@ -25,9 +26,15 @@ class Login:
         return token
 
     def logout_user(self, **kwargs):
-        response = self.facade.login_api.del_v1_account_login(**kwargs)
+        response = self.facade.login_api.del_v1_account_login(
+            status_code=204,
+            **kwargs
+        )
         return response
 
     def logout_user_from_all_device(self, **kwargs):
-        response = self.facade.login_api.delete_v1_account_login_all(**kwargs)
+        response = self.facade.login_api.delete_v1_account_login_all(
+            status_code=204,
+            **kwargs
+        )
         return response

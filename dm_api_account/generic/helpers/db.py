@@ -6,5 +6,22 @@ class DmDataBase:
 
     def get_all_users(self):
         query = 'select * from "public"."Users"'
-        dataset = self.db.send_query(query)
+        dataset = self.db.send_query(query=query)
         return dataset
+
+
+    def get_user_by_login(self, login):
+        query = f'''
+        select * from "public"."Users"
+        where "Login" = '{login}'
+        '''
+        dataset = self.db.send_query(query=query)
+        return dataset
+
+    def delete_user_by_login(self, login):
+        query = f'''
+        delete from "public"."Users" where "Login" = '{login}'
+        '''
+        dataset = self.db.send_bulk_query(query=query)
+        return dataset
+
