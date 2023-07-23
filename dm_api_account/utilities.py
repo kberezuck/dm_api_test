@@ -16,4 +16,4 @@ def validate_status_code(response: requests.Response, status_code: int):
     :type status_code: object
     """
     assert response.status_code == status_code, \
-        f"Ожидался статус код 201, а фактически {response.status_code}"
+        f"Ожидался статус код {status_code}, а фактически {response.status_code}"

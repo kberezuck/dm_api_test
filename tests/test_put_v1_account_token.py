@@ -1,38 +1,29 @@
-import structlog
-from hamcrest import assert_that, has_properties, instance_of
-from datetime import datetime
-from dm_api_account.generic.helpers.mailhog import MailhogApi
+from hamcrest import assert_that, has_properties
+
 from dm_api_account.models.user_envelope_model import UserRole
-from services.dm_api_account import Facade
-
-structlog.configure(
-    processors=[
-        structlog.processors.JSONRenderer(indent=4, sort_keys=True, ensure_ascii=False)
-    ]
-)
-
-login = "ksb94"
-email = "ksb94@mail.ru"
-password = "qwerty1234"
 
 
-def test_put_v1_account_token():
-    mailhog = MailhogApi(host="http://localhost:5025")
-    api = Facade(host="http://localhost:5051")
-
+def test_put_v1_account_token(dm_api_facade, orm_db, prepare_user):
+    login = prepare_user.login
+    email = prepare_user.email
+    password = prepare_user.password
     # Register new user
-
-    response = api.account.register_new_user(
+    response = dm_api_facade.account.register_new_user(
         login=login,
         email=email,
-        password=password
+        password=password,
+        status_code=201
     )
+    dataset = orm_db.get_user_by_login(login=login)
+    for row in dataset:
+        assert_that(row.Login == login, row.Activated is False)
+
     # Get token from email
-    token = api.mailhog.get_token_by_login(login=login)
-    response = api.account_api.put_v1_account_token(token=token, status_code=200)
+    token = dm_api_facade.mailhog.get_token_by_login(login=login, search='activate')
+    response = dm_api_facade.account_api.put_v1_account_token(token=token, status_code=200)
     assert_that(response.resource, has_properties(
         {
-            "login": "ksb94",
+            "login": login,
             "roles": [UserRole.guest, UserRole.player]
         }
     ))

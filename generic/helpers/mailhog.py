@@ -60,20 +60,19 @@ class MailhogApi:
         for email in emails:
             user_data = json.loads(email['Content']["Body"])
             if login == user_data.get("Login") and search == 'activate':
-                token = user_data["ConfirmationLinkUrl"].split('/')[-1]
+                token = user_data['ConfirmationLinkUrl'].split('/')[-1]
                 print(token)
                 return token
             elif login == user_data.get("Login") and search == 'password':
-                token = user_data["ConfirmationLinkUri"].split('/')[-1]
+                token = user_data['ConfirmationLinkUri'].split('/')[-1]
                 print(token)
                 return token
         time.sleep(2)
-        return self.get_token_by_login(login=login, attempt=attempt - 1)
+        return self.get_token_by_login(login=login, search=search, attempt=attempt - 1)
 
     def delete_all_messages(self):
         response = self.client.delete(path='/api/v1/messages')
         return response
-
 
 # if __name__ == "__main__":
 #     MailhogApi().get_api_v2_messages(limit=2)

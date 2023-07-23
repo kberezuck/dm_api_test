@@ -1,4 +1,6 @@
 from db_client.db_client import DbClient
+
+
 class DmDataBase:
 
     def __init__(self, user, password, host, database):
@@ -8,7 +10,6 @@ class DmDataBase:
         query = 'select * from "public"."Users"'
         dataset = self.db.send_query(query=query)
         return dataset
-
 
     def get_user_by_login(self, login):
         query = f'''
@@ -25,3 +26,9 @@ class DmDataBase:
         dataset = self.db.send_bulk_query(query=query)
         return dataset
 
+    def activate_user(self, login):
+        query = f'''
+                update "public"."Users" set "Activated" = true where "Login" = '{login}'
+                '''
+        dataset = self.db.send_bulk_query(query=query)
+        return dataset
