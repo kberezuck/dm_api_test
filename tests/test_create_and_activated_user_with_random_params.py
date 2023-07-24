@@ -19,11 +19,11 @@ def random_string(begin=1, end=30):
 
 
 @pytest.mark.parametrize('login, email, password, status_code, check', [
-    ('12', '12@12.ru', '123456', 201, ''),                                  # Валидные данные
+    ('12', '12@12.ru', '123456', 201, ''),  # Валидные данные
     ('12', '12@12.ru', random_string(1, 5), 400, {"Password": ["Short"]}),  # Пароль менее либо равен 5 символам
-    ('1', '12@12.ru', '123456', 400, {"Login": ["Short"]}),                 # Логин менее 2 символов
-    ('12', '12@', '123456', 400, {"Email": ["Invalid"]}),                   # Емейл не содержит доменную часть
-    ('12', '12', '123456', 400, {"Email": ["Invalid"]})                     # Емейл не содержит символ @
+    ('1', '12@12.ru', '123456', 400, {"Login": ["Short"]}),  # Логин менее 2 символов
+    ('12', '12@', '123456', 400, {"Email": ["Invalid"]}),  # Емейл не содержит доменную часть
+    ('12', '12', '123456', 400, {"Email": ["Invalid"]})  # Емейл не содержит символ @
 ])
 def test_create_and_activated_user_with_random_params(
         dm_api_facade,
@@ -64,6 +64,5 @@ def test_create_and_activated_user_with_random_params(
         )
 
     elif response.status_code == status_code:
-        assert response.json()['errors'] == check,\
+        assert response.json()['errors'] == check, \
             f"Ожидаласть ошибка {check}, а фактически ошибка {response.json()['errors']}"
-        return print(response.json()['errors'])

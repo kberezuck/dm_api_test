@@ -7,6 +7,8 @@ from generic.helpers.dm_db import DmDataBase
 from generic.helpers.mailhog import MailhogApi
 from generic.helpers.orm_db import OrmDataBase
 from services.dm_api_account import Facade
+from vyper import v
+from pathlib import Path
 
 # делаем лог "красивым" и удобочитаемым
 structlog.configure(
@@ -25,6 +27,13 @@ def mailhog():
 def dm_api_facade(mailhog, request):
     host = request.config.getoption('--env')
     return Facade(host=host, mailhog=mailhog)
+
+
+options = (
+    'service.dm_api_account',
+    'service.mailhog',
+    'database.dm3_5.host'
+)
 
 
 @pytest.fixture()
@@ -64,5 +73,10 @@ def prepare_user(dm_api_facade, orm_db):
     return User
 
 
+def set_config(request):
+    host = request.config.getoption('--env')
+
 def pytest_addoption(parser):
-    parser.addoption('--env', action='store', default='http://localhost:5051')
+    parser.addoption('--env', action='store', default='stg')
+    for option in options:
+        parser.addoption(f'--{option}', action='store', default=None)
