@@ -59,12 +59,11 @@ def test_create_and_activated_user_with_random_params(
         # Login user
         dm_api_facade.login.login_user(
             login=login,
-            password=password
+            password=password,
+            status_code=200
         )
 
     elif response.status_code == status_code:
-        error_text = response.json()['errors']
-        if error_text == check:
-            print(f"Ошибка регистрационных данных: {error_text}")
-        else:
-            print(f"Ожидаласть ошибка {check}, а фактически ошибка {error_text}")
+        assert response.json()['errors'] == check,\
+            f"Ожидаласть ошибка {check}, а фактически ошибка {response.json()['errors']}"
+        return print(response.json()['errors'])
