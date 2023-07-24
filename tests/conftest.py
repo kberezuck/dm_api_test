@@ -1,14 +1,14 @@
 from collections import namedtuple
+from pathlib import Path
 
 import pytest
 import structlog
+from vyper import v
 
 from generic.helpers.dm_db import DmDataBase
 from generic.helpers.mailhog import MailhogApi
 from generic.helpers.orm_db import OrmDataBase
 from services.dm_api_account import Facade
-from vyper import v
-from pathlib import Path
 
 # делаем лог "красивым" и удобочитаемым
 structlog.configure(
@@ -20,13 +20,15 @@ structlog.configure(
 
 @pytest.fixture()
 def mailhog():
-    return MailhogApi(host="http://localhost:5025")
+    return MailhogApi(host=v.get('service.mailhog'))
 
 
 @pytest.fixture()
-def dm_api_facade(mailhog, request):
-    host = request.config.getoption('--env')
-    return Facade(host=host, mailhog=mailhog)
+def dm_api_facade(mailhog):
+    return Facade(
+        host=v.get('service.dm_api_account'),
+        mailhog=mailhog
+    )
 
 
 options = (
@@ -38,13 +40,23 @@ options = (
 
 @pytest.fixture()
 def dm_db():
-    db = DmDataBase(user='postgres', password='admin', host='localhost', database='dm3.5')
+    db = DmDataBase(
+        user=v.get('database.dm3_5.user'),
+        password=v.get('database.dm3_5.password'),
+        host=v.get('database.dm3_5.host'),
+        database=v.get('database.dm3_5.database')
+    )
     return db
 
 
 @pytest.fixture()
 def orm_db():
-    db = OrmDataBase(user='postgres', password='admin', host='localhost', database='dm3.5')
+    db = OrmDataBase(
+        user=v.get('database.dm3_5.user'),
+        password=v.get('database.dm3_5.password'),
+        host=v.get('database.dm3_5.host'),
+        database=v.get('database.dm3_5.database')
+    )
     return db
 
 
@@ -73,8 +85,21 @@ def prepare_user(dm_api_facade, orm_db):
     return User
 
 
+@pytest.fixture(autouse=True)
 def set_config(request):
-    host = request.config.getoption('--env')
+    dm_api_catalog = Path(__file__).home().joinpath(   # относительный путь к каталогу dm_api_testing
+        'PycharmProjects',
+        'python',
+        'dm_api_testing'
+    )
+    config = dm_api_catalog.joinpath('config')
+    config_name = request.config.getoption('--env')
+    v.set_config_name(config_name)
+    v.add_config_path(config)
+    v.read_in_config()
+    for option in options:
+        v.set(option, request.config.getoption(f'--{option}'))
+
 
 def pytest_addoption(parser):
     parser.addoption('--env', action='store', default='stg')
