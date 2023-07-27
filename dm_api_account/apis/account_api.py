@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import allure
 from requests import Response
 
 from restclient.restclient import Restclient
@@ -48,12 +49,14 @@ class AccountApi:
         Register new user
         :return:
         """
-        response = self.client.post(
-            path=f"/v1/account",
-            json=validate_request_json(json),
-            # by_alias- использование только тех "названий переменных", кот-е мы указали.
-            **kwargs  # exclude - выключает поля, кот-е ничем незаполнены (опциональные) если их нет, - мы и не поверяем
-        )
+        with allure.step("Регистрация нового пользователя"):
+            response = self.client.post(
+                path=f"/v1/account",
+                json=validate_request_json(json),
+                # by_alias- использование только тех "названий переменных", кот-е мы указали.
+                **kwargs  # exclude - выключает поля, кот-е ничем незаполнены (опциональные) если их нет, - мы и не поверяем
+            )
+
         validate_status_code(response, status_code)
         return response
         # BadRequestModel(**response.json())
@@ -71,11 +74,12 @@ class AccountApi:
         Reset registered user password
         :return:
         """
-        response = self.client.post(
-            path=f"/v1/account/password",
-            json=validate_request_json(json),
-            **kwargs
-        )
+        with allure.step("Сброс пароля пользователя"):
+            response = self.client.post(
+                path=f"/v1/account/password",
+                json=validate_request_json(json),
+                **kwargs
+            )
         validate_status_code(response, status_code)
         if response.status_code == 200:
             return UserEnvelope(**response.json())
@@ -95,11 +99,12 @@ class AccountApi:
         Change registered user email
         :return:
         """
-        response = self.client.put(
-            path=f"/v1/account/email",
-            json=validate_request_json(json),
-            **kwargs
-        )
+        with allure.step("Изменение зарегистрированного е-мэйла"):
+            response = self.client.put(
+                path=f"/v1/account/email",
+                json=validate_request_json(json),
+                **kwargs
+            )
         validate_status_code(response, status_code)
         if response.status_code == 200:
             return UserEnvelope(**response.json())
@@ -118,11 +123,12 @@ class AccountApi:
         Change registered user password
         :return:
         """
-        response = self.client.put(
-            path=f"/v1/account/password",
-            json=validate_request_json(json),
-            **kwargs
-        )
+        with allure.step("Установка нового пароля"):
+            response = self.client.put(
+                path=f"/v1/account/password",
+                json=validate_request_json(json),
+                **kwargs
+            )
         validate_status_code(response, status_code)
         if response.status_code == 200:
             UserEnvelope(**response.json())
@@ -141,10 +147,11 @@ class AccountApi:
         Activate registered user
         :return:
         """
-        response = self.client.put(
-            path=f"/v1/account/{token}",
-            **kwargs
-        )
+        with allure.step("Активация зарегистрированного пользователя"):
+            response = self.client.put(
+                path=f"/v1/account/{token}",
+                **kwargs
+            )
         validate_status_code(response, status_code)
         if response.status_code == 200:
             return UserEnvelope(**response.json())

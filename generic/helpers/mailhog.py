@@ -1,6 +1,8 @@
 import json
 import time
 
+import allure
+import requests
 import structlog
 from requests import Response
 
@@ -13,19 +15,36 @@ structlog.configure(
 )
 
 
-# def decorator(fn):
-#     def wrapper(*args, **kwargs):
-#         for i in range(5):
-#             response = fn(*args, **kwargs)
-#             emails = response.json()["items"]
-#             if len(emails) < 5:
-#                 print(f"attempt {i}")
-#                 time.sleep(2)
-#                 continue
-#             else:
-#                 return response
-#
-#     return wrapper()
+def allure_attach(fn):
+    def wrapper(*args, **kwargs):
+        body = kwargs.get('json')
+        if body:
+            allure.attach(
+                json.dumps(kwargs.get('json'), indent=2),
+                name='request',
+                attachment_type=allure.attachment_type.JSON
+            )
+
+        response = fn(*args, **kwargs)
+        try:
+            response_json = response.json()
+        except requests.exceptions.JSONDecodeError:
+            response_text = response.text
+            status_code = f'<status_code {response.status_code}>'
+            allure.attach(
+                response_text if len(response_text) > 0 else status_code,
+                name='response',
+                attachment_type=allure.attachment_type.TEXT
+            )
+        else:
+            allure.attach(
+                json.dumps(response_json, indent=2),
+                name='response',
+                attachment_type=allure.attachment_type.JSON
+            )
+        return response
+
+    return wrapper
 
 
 class MailhogApi:
@@ -33,7 +52,7 @@ class MailhogApi:
         self.host = host
         self.client = Restclient(host=host)
 
-    # @decorator
+    @allure_attach
     def get_api_v2_messages(self, limit: int = 50) -> Response:
         """
         Get message by limit
@@ -53,9 +72,9 @@ class MailhogApi:
         Get user activation token from email by login
         :return:
         """
-
-        if attempt == 0:
-            raise AssertionError(f'Не удалось получить письмо с логином {login}')
+        with allure.step("Получение токена из письма"):
+            if attempt == 0:
+                raise AssertionError(f'Не удалось получить письмо с логином {login}')
         emails = self.get_api_v2_messages(limit=5).json()["items"]
         for email in emails:
             user_data = json.loads(email['Content']["Body"])
@@ -70,6 +89,7 @@ class MailhogApi:
         time.sleep(2)
         return self.get_token_by_login(login=login, search=search, attempt=attempt - 1)
 
+    @allure_attach
     def delete_all_messages(self):
         response = self.client.delete(path='/api/v1/messages')
         return response

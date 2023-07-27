@@ -1,10 +1,12 @@
 from collections import namedtuple
 from pathlib import Path
 
+import allure
 import pytest
 import structlog
 from vyper import v
 
+from generic.assertions.check_user import AssertionsCheckUser
 from generic.helpers.dm_db import DmDataBase
 from generic.helpers.mailhog import MailhogApi
 from generic.helpers.orm_db import OrmDataBase
@@ -60,6 +62,11 @@ def orm_db():
     return db
 
 
+@pytest.fixture()
+def assertions(orm_db):
+    return AssertionsCheckUser(orm_db)
+
+
 # @pytest.fixture
 # def prepare_user(dm_api_facade, dm_db):
 #     user = namedtuple('User', 'login, email, password')
@@ -72,6 +79,7 @@ def orm_db():
 #
 #     return User
 
+@allure.step("Подготовка тестового пользователя")
 @pytest.fixture
 def prepare_user(dm_api_facade, orm_db):
     user = namedtuple('User', 'login, email, password')
@@ -87,12 +95,7 @@ def prepare_user(dm_api_facade, orm_db):
 
 @pytest.fixture(autouse=True)
 def set_config(request):
-    dm_api_catalog = Path(__file__).home().joinpath(   # относительный путь к каталогу dm_api_testing
-        'PycharmProjects',
-        'python',
-        'dm_api_testing'
-    )
-    config = dm_api_catalog.joinpath('config')
+    config = Path(__file__).parent.joinpath('config')
     config_name = request.config.getoption('--env')
     v.set_config_name(config_name)
     v.add_config_path(config)

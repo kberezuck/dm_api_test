@@ -1,3 +1,5 @@
+import allure
+
 from model import LoginCredentials
 
 
@@ -21,8 +23,9 @@ class Login:
         return response
 
     def get_auth_token(self, login: str, password: str, status_code: int, remember_me: bool = True):
-        response = self.login_user(login=login, password=password, remember_me=remember_me, status_code=status_code)
-        token = {'X-Dm-Auth-Token': response.headers['X-Dm-Auth-Token']}
+        with allure.step("Получение токена для хедеров"):
+            response = self.login_user(login=login, password=password, remember_me=remember_me, status_code=status_code)
+            token = {'X-Dm-Auth-Token': response.headers['X-Dm-Auth-Token']}
         return token
 
     def logout_user(self, status_code: int, **kwargs):
