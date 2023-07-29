@@ -1,7 +1,7 @@
 import allure
 from hamcrest import assert_that, has_properties
 
-from apis.dm_api_account.models.user_envelope_model import UserRole
+from dm_api_account.models.user_envelope_model import UserRole
 
 
 @allure.suite("Тесты на проверку метода PUT/v1/account/token")
