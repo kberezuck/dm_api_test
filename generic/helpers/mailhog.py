@@ -5,8 +5,7 @@ import allure
 import requests
 import structlog
 from requests import Response
-
-from common_libs.restclient.restclient import Restclient
+from restclient.restclient import Restclient
 
 structlog.configure(
     processors=[

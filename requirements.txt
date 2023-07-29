@@ -1,3 +1,7 @@
+git+https://github.com/kberezuck/restclient.git
+git+https://github.com/kberezuck/orm_client.git
+git+https://github.com/kberezuck/db_client.git
+git+https://github.com/kberezuck/dm_api_account.git
 requests
 pytest
 structlog
@@ -6,3 +10,4 @@ pydantic
 pyhamcrest
 sqlalchemy
 sqlacodegen
+allure-pytest
