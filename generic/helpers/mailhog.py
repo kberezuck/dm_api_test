@@ -6,7 +6,7 @@ import requests
 import structlog
 from requests import Response
 
-from restclient.restclient import Restclient
+from common_libs.restclient.restclient import Restclient
 
 structlog.configure(
     processors=[

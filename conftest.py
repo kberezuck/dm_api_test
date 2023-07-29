@@ -6,6 +6,7 @@ import pytest
 import structlog
 from vyper import v
 
+from data.post_v1_account import PostV1AccountData as user_data
 from generic.assertions.check_user import AssertionsCheckUser
 from generic.helpers.dm_db import DmDataBase
 from generic.helpers.mailhog import MailhogApi
@@ -83,7 +84,7 @@ def assertions(orm_db):
 @pytest.fixture
 def prepare_user(dm_api_facade, orm_db):
     user = namedtuple('User', 'login, email, password')
-    User = user(login='ksb24', email='ksb024@mail.ru', password='qwerty1234')
+    User = user(login=user_data.login, email=user_data.email, password=user_data.password)
     # удаления юзера перед началом теста, запрашиваем БД, чтобы убедиться, что такого юзера там нет
     orm_db.delete_user_by_login(login=User.login)
     dataset = orm_db.get_user_by_login(login=User.login)

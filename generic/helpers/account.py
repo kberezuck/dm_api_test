@@ -1,10 +1,7 @@
-from dm_api_account.models import ChangeEmail
-from dm_api_account.models import ChangePassword
-from dm_api_account.models import Registration
-from dm_api_account.models import ResetPassword
-
-
-# from dm_api_account.generic.helpers.mailhog import MailhogApi
+from apis.dm_api_account.models import ChangeEmail
+from apis.dm_api_account.models import ChangePassword
+from apis.dm_api_account.models import Registration
+from apis.dm_api_account.models import ResetPassword
 
 
 class Account:

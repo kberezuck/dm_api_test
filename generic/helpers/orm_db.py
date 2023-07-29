@@ -3,25 +3,8 @@ from typing import List
 import allure
 from sqlalchemy import select, update, delete
 
+from common_libs.orm_client.orm_client import OrmClient
 from generic.helpers.orm_models import User
-from orm_client.orm_client import OrmClient
-
-
-# def allure_attach(fn):
-#     def wrapper(*args, **kwargs):
-#         #         print(f"Смотри, что я получил:, {args}, {kwargs}")
-#         query = kwargs.get('query')
-#         print(f'query: {query}')
-#         dataset = fn(*args, **kwargs)
-#
-#         #         # allure.attach(
-#         #         #     query.compile(compile_kwargs={"literal_binds": True}),
-#         #         #     name='request',
-#         #         #     attachment_type=allure.attachment_type.JSON
-#         #         # )
-#         return dataset
-#
-#     return wrapper
 
 
 class OrmDataBase:

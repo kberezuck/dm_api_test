@@ -1,24 +1,24 @@
 from datetime import datetime
 
 import allure
-from hamcrest import assert_that, has_properties, instance_of
+from hamcrest import assert_that, has_properties, instance_of, starts_with
 
-from dm_api_account.models.user_envelope_model import UserRole
+from apis.dm_api_account.models.user_envelope_model import UserRole
 
 
-@allure.suite("Тесты на проверку метода PUT/v1/account/email")
+@allure.suite("Тесты на проверку метода POST/v1/account/password")
 @allure.sub_suite("Позитивные проверки")
-class TestsPutV1AccountEmail:
-    @allure.title("Установка нового е-мэйла")
-    def test_put_v1_account_email(self, dm_api_facade, orm_db, prepare_user, assertions):
+class TestsPostV1AccountPassword:
+    @allure.title("Сброс пароля")
+    def test_post_v1_account_password(self, dm_api_facade, orm_db, prepare_user, assertions):
         """
-        Тест на установку нового е-мэйла
+        Тест на создание пользователя и сброс пароля
         """
+        # Register new user
         login = prepare_user.login
         email = prepare_user.email
         password = prepare_user.password
 
-        # Register new user
         dm_api_facade.account.register_new_user(
             login=login,
             email=email,
@@ -45,18 +45,18 @@ class TestsPutV1AccountEmail:
         )
         dm_api_facade.account.set_headers(headers=token)
 
-        new_email = 'ksbb023@mail.ru'
-        response = dm_api_facade.account.change_email(
+        # Reset password
+        response = dm_api_facade.account.reset_registered_user_password(
             login=login,
-            email=new_email,
-            password=password,
+            email=email,
             status_code=200
         )
 
         assert_that(response.resource, has_properties(
             {
-                "login": "ksb24",
+                "login": login,
                 "roles": [UserRole.guest, UserRole.player],
-                'online': instance_of(datetime)
+                "registration": instance_of(datetime)
             }
         ))
+        assert_that(response.metadata["email"], starts_with("ks"))

@@ -30,6 +30,7 @@ def allure_attach(fn):
 
     return wrapper
 
+
 class DbClient:
     def __init__(self, user, password, host, database, isolation_level="AUTOCOMMIT"):
         connection_string = f"postgresql://{user}:{password}@{host}/{database}"
