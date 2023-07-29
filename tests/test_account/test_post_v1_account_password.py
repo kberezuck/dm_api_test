@@ -3,7 +3,7 @@ from datetime import datetime
 import allure
 from hamcrest import assert_that, has_properties, instance_of, starts_with
 
-from dm_api_account.models.user_envelope_model import UserRole
+from apis.dm_api_account.models.user_envelope_model import UserRole
 
 
 @allure.suite("Тесты на проверку метода POST/v1/account/password")
