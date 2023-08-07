@@ -17,8 +17,7 @@ class TestsDelV1AccountLogin:
         response = dm_api_facade.account.register_new_user(
             login=login,
             email=email,
-            password=password,
-            status_code=201
+            password=password
         )
 
         assertions.check_user_was_created(login=login)
@@ -28,17 +27,15 @@ class TestsDelV1AccountLogin:
         # Login user
         dm_api_facade.login.login_user(
             login=login,
-            password=password,
-            status_code=200
+            password=password
         )
 
         # Get authorisation token and set headers
-        token = dm_api_facade.login.get_auth_token(
+        x_dm_auth_token = dm_api_facade.login.get_auth_token(
             login=login,
-            password=password,
-            status_code=200
+            password=password
         )
-        dm_api_facade.login.set_headers(headers=token)
+        # dm_api_facade.login.set_headers(headers=token)
 
         # Logout from all devices
-        dm_api_facade.login.logout_user_from_all_device(status_code=204)
+        dm_api_facade.login.logout_user_from_all_device(x_dm_auth_token=x_dm_auth_token)

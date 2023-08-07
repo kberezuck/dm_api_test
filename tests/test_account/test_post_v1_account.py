@@ -13,17 +13,16 @@ class TestsPostV1Account:
         email = prepare_user.email
         password = prepare_user.password
 
-        dm_api_facade.account.register_new_user(
+        response = dm_api_facade.account.register_new_user(
             login=login,
             email=email,
-            password=password,
-            status_code=201
+            password=password
         )
+
         assertions.check_user_was_created(login=login)
         orm_db.activate_user(login=login)
         assertions.check_user_was_activated(login=login)
         dm_api_facade.login.login_user(
             login=login,
-            password=password,
-            status_code=200
+            password=password
         )

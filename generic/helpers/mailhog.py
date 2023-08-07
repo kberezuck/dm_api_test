@@ -66,24 +66,28 @@ class MailhogApi:
         )
         return response
 
-    def get_token_by_login(self, login: str, search: str, attempt=50):
+    def get_token_by_login(self, login: str, search: str, attempt: int = 5) -> str:
         """
         Get user activation token from email by login
         :return:
         """
+        if search == 'activate':
+            link_type = 'ConfirmationLinkUrl'
+        elif search == 'password':
+            link_type = 'ConfirmationLinkUri'
+        else:
+            raise AssertionError(
+                f'Слово для поиска должно быть "activate" или "password", но искомое слово == {search}')
+
         with allure.step("Получение токена из письма"):
             if attempt == 0:
                 raise AssertionError(f'Не удалось получить письмо с логином {login}')
         emails = self.get_api_v2_messages(limit=5).json()["items"]
         for email in emails:
             user_data = json.loads(email['Content']["Body"])
-            if login == user_data.get("Login") and search == 'activate':
-                token = user_data['ConfirmationLinkUrl'].split('/')[-1]
-                print(token)
-                return token
-            elif login == user_data.get("Login") and search == 'password':
-                token = user_data['ConfirmationLinkUri'].split('/')[-1]
-                print(token)
+            if login == user_data.get("Login") and user_data.get(link_type):
+                token_link_url = user_data[link_type]
+                token = token_link_url.split('/')[-1]
                 return token
         time.sleep(2)
         return self.get_token_by_login(login=login, search=search, attempt=attempt - 1)

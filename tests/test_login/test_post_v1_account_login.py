@@ -17,8 +17,7 @@ class TestsPostV1AccountLogin:
         dm_api_facade.account.register_new_user(
             login=login,
             email=email,
-            password=password,
-            status_code=201
+            password=password
         )
 
         assertions.check_user_was_created(login=login)
@@ -28,6 +27,5 @@ class TestsPostV1AccountLogin:
         # Login user
         dm_api_facade.login.login_user(
             login=login,
-            password=password,
-            status_code=200
+            password=password
         )

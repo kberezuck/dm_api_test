@@ -19,8 +19,7 @@ class TestsPutV1AccountPassword:
         dm_api_facade.account.register_new_user(
             login=login,
             email=email,
-            password=password,
-            status_code=201
+            password=password
         )
 
         assertions.check_user_was_created(login=login)
@@ -30,23 +29,21 @@ class TestsPutV1AccountPassword:
         # Login user
         dm_api_facade.login.login_user(
             login=login,
-            password=password,
-            status_code=200
+            password=password
         )
 
         # Get authorisation token and set headers
-        token = dm_api_facade.login.get_auth_token(
+        x_dm_auth_token = dm_api_facade.login.get_auth_token(
             login=login,
-            password=password,
-            status_code=200
+            password=password
         )
-        dm_api_facade.account.set_headers(headers=token)
+        # dm_api_facade.account.set_headers(headers=token)
 
         # Reset password
         dm_api_facade.account.reset_registered_user_password(
             login=login,
             email=email,
-            status_code=200
+            x_dm_auth_token=x_dm_auth_token
         )
         time.sleep(2)
         # Change password
@@ -55,5 +52,5 @@ class TestsPutV1AccountPassword:
             login=login,
             old_password=password,
             new_password=new_password,
-            status_code=200
+            x_dm_auth_token=x_dm_auth_token
         )

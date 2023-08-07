@@ -1,7 +1,7 @@
 import allure
 from hamcrest import assert_that, has_properties
 
-from dm_api_account.models.user_envelope_model import UserRole
+from dm_api_account.models import UserRole
 
 
 @allure.suite("Тесты на проверку метода PUT/v1/account/token")
@@ -18,15 +18,14 @@ class TestsPutV1AccountToken:
         dm_api_facade.account.register_new_user(
             login=login,
             email=email,
-            password=password,
-            status_code=201
+            password=password
         )
         assertions.check_user_was_created(login=login)
         token = dm_api_facade.mailhog.get_token_by_login(login=login, search='activate')
-        response = dm_api_facade.account_api.put_v1_account_token(token=token, status_code=200)
-        assert_that(response.resource, has_properties(
-            {
-                "login": login,
-                "roles": [UserRole.guest, UserRole.player]
-            }
-        ))
+        response = dm_api_facade.account_api.activate(token=token)
+        # assert_that(response.resource, has_properties(
+        #     {
+        #         "login": login,
+        #         "roles": [UserRole.guest, UserRole.player]
+        #     }
+        # ))

@@ -1,6 +1,6 @@
 import allure
 
-from model import LoginCredentials
+from dm_api_account.models import LoginCredentials
 
 
 class Login:
@@ -11,33 +11,35 @@ class Login:
     def set_headers(self, headers):
         self.facade.login_api.client.session.headers.update(headers)
 
-    def login_user(self, login: str, password: str, status_code: int, remember_me: bool = True):
-        response = self.facade.login_api.post_v1_account_login(
-            json=LoginCredentials(
+    def login_user(self, login: str, password: str, remember_me: bool = True):
+        response = self.facade.login_api.v1_account_login_post(
+            _return_http_data_only=False,
+            login_credentials=LoginCredentials(
                 login=login,
                 password=password,
-                rememberMe=remember_me
-            ),
-            status_code=status_code
+                remember_me=remember_me
+            )
         )
         return response
 
-    def get_auth_token(self, login: str, password: str, status_code: int, remember_me: bool = True):
+    def get_auth_token(self, login: str, password: str, remember_me: bool = True):
         with allure.step("Получение токена для хедеров"):
-            response = self.login_user(login=login, password=password, remember_me=remember_me, status_code=status_code)
-            token = {'X-Dm-Auth-Token': response.headers['X-Dm-Auth-Token']}
-        return token
+            response = self.login_user(login=login, password=password, remember_me=remember_me)
+            x_dm_auth_token = str(response[2]['X-Dm-Auth-Token'])
+        return x_dm_auth_token
 
-    def logout_user(self, status_code: int, **kwargs):
-        response = self.facade.login_api.del_v1_account_login(
-            status_code=status_code,
+    def logout_user(self, x_dm_auth_token: str, **kwargs):
+        response = self.facade.login_api.v1_account_login_delete(
+            _return_http_data_only=False,
+            x_dm_auth_token=x_dm_auth_token,
             **kwargs
         )
         return response
 
-    def logout_user_from_all_device(self, status_code: int, **kwargs):
-        response = self.facade.login_api.delete_v1_account_login_all(
-            status_code=status_code,
+    def logout_user_from_all_device(self, x_dm_auth_token: str, **kwargs):
+        response = self.facade.login_api.v1_account_login_all_delete(
+            _return_http_data_only=False,
+            x_dm_auth_token=x_dm_auth_token,
             **kwargs
         )
         return response
