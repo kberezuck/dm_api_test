@@ -4,13 +4,16 @@ from pathlib import Path
 import allure
 import pytest
 import structlog
+from grpclib.client import Channel
 from vyper import v
 
+from apis.dm_api_search_async import SearchEngineStub
 from data.post_v1_account import PostV1AccountData as user_data
 from generic.assertions.check_user import AssertionsCheckUser
 from generic.helpers.dm_db import DmDataBase
 from generic.helpers.mailhog import MailhogApi
 from generic.helpers.orm_db import OrmDataBase
+from generic.helpers.search import Search
 from services.dm_api_account import Facade
 
 # делаем лог "красивым" и удобочитаемым
@@ -37,6 +40,9 @@ def dm_api_facade(mailhog):
 options = (
     'service.dm_api_account',
     'service.mailhog',
+    'service.target',
+    'service.host',
+    'service.port',
     'database.dm3_5.host'
 )
 
@@ -61,6 +67,21 @@ def orm_db():
         database=v.get('database.dm3_5.database')
     )
     return db
+
+
+@pytest.fixture()
+def grpc_search():
+    client = Search(target=v.get('service.target'))
+    yield client
+    client.close()
+
+
+@pytest.fixture()
+def grpc_search_async():
+    channel = Channel(host=v.get('service.host'), port=v.get('service.port'))
+    client = SearchEngineStub(channel)
+    yield client
+    channel.close()
 
 
 @pytest.fixture()
