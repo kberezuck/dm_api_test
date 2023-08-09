@@ -47,6 +47,7 @@ class TestsPostV1AccountPassword:
             email=email,
             x_dm_auth_token=x_dm_auth_token
         )
+        print(response)
 
         # assert_that(response.resource, has_properties(
         #     {
