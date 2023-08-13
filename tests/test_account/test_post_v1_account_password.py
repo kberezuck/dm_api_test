@@ -49,11 +49,11 @@ class TestsPostV1AccountPassword:
         )
         print(response)
 
-        # assert_that(response.resource, has_properties(
-        #     {
-        #         "login": login,
-        #         "roles": [UserRole.guest, UserRole.player],
-        #         "registration": instance_of(datetime)
-        #     }
-        # ))
-        # assert_that(response.metadata["email"], starts_with("ks"))
+        assert_that(response.resource, has_properties(
+            {
+                "login": login,
+                "roles": [UserRole('Guest'), UserRole('Player')],
+                "registration": instance_of(datetime)
+            }
+        ))
+        assert_that(response.metadata["email"], starts_with("ks"))

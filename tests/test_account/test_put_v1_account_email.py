@@ -50,10 +50,10 @@ class TestsPutV1AccountEmail:
             x_dm_auth_token=x_dm_auth_token
         )
 
-        # assert_that(response.resource, has_properties(
-        #     {
-        #         "login": "ksb24",
-        #         "roles": [UserRole.guest, UserRole.player],
-        #         'online': instance_of(datetime)
-        #     }
-        # ))
+        assert_that(response.resource, has_properties(
+            {
+                "login": "ksb24",
+                "roles": [UserRole('Guest'), UserRole('Player')],
+                'online': instance_of(datetime)
+            }
+        ))

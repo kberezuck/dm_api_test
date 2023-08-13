@@ -30,7 +30,6 @@ class Login:
 
     def logout_user(self, x_dm_auth_token: str, **kwargs):
         response = self.facade.login_api.v1_account_login_delete(
-            _return_http_data_only=False,
             x_dm_auth_token=x_dm_auth_token,
             **kwargs
         )
@@ -38,7 +37,6 @@ class Login:
 
     def logout_user_from_all_device(self, x_dm_auth_token: str, **kwargs):
         response = self.facade.login_api.v1_account_login_all_delete(
-            _return_http_data_only=False,
             x_dm_auth_token=x_dm_auth_token,
             **kwargs
         )

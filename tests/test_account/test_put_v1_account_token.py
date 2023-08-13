@@ -23,9 +23,9 @@ class TestsPutV1AccountToken:
         assertions.check_user_was_created(login=login)
         token = dm_api_facade.mailhog.get_token_by_login(login=login, search='activate')
         response = dm_api_facade.account_api.activate(token=token)
-        # assert_that(response.resource, has_properties(
-        #     {
-        #         "login": login,
-        #         "roles": [UserRole.guest, UserRole.player]
-        #     }
-        # ))
+        assert_that(response.resource, has_properties(
+            {
+                "login": login,
+                "roles": [UserRole('Guest'), UserRole('Player')]
+            }
+        ))
